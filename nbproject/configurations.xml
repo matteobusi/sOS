@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="79">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df name="src" root="src">
+      <df name="assembly">
+        <in>gdt_flush.s</in>
+        <in>idt_flush.s</in>
+        <in>irq_asm.s</in>
+        <in>isr_asm.s</in>
+        <in>start.s</in>
+      </df>
+      <df name="headers">
+        <in>commons.h</in>
+        <in>gdt.h</in>
+        <in>graphics.h</in>
+        <in>heap.h</in>
+        <in>idt.h</in>
+        <in>initrd.h</in>
+        <in>irq.h</in>
+        <in>isr.h</in>
+        <in>multiboot.h</in>
+        <in>paging.h</in>
+        <in>panic.h</in>
+        <in>physman.h</in>
+        <in>pit.h</in>
+        <in>stdarg.h</in>
+        <in>stdout.h</in>
+        <in>system.h</in>
+      </df>
+      <df name="sources">
+        <in>gdt.c</in>
+        <in>graphics.c</in>
+        <in>heap.c</in>
+        <in>idt.c</in>
+        <in>initrd.c</in>
+        <in>irq.c</in>
+        <in>isr.c</in>
+        <in>main.c</in>
+        <in>paging.c</in>
+        <in>panic.c</in>
+        <in>physman.c</in>
+        <in>pit.c</in>
+        <in>stdout.c</in>
+        <in>system.c</in>
+      </df>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>../SOS/Makefile</itemPath>
+      <itemPath>SOS_1-Makefile.mk</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>./src</Elem>
+  </sourceRootList>
+  <projectmakefile>SOS_1-Makefile.mk</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>GNU|GNU</compilerSet>
+      </toolsSet>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath>./run.sh</executablePath>
+          <cTool>
+            <incDir>
+              <pElem>src/headers/boot</pElem>
+              <pElem>src/headers/clib</pElem>
+              <pElem>src/headers</pElem>
+              <pElem>src/headers/utilities</pElem>
+              <pElem>src/headers/multitasking</pElem>
+              <pElem>src/headers/structures</pElem>
+              <pElem>.</pElem>
+              <pElem>src/headers/interrupts</pElem>
+              <pElem>src/headers/memory</pElem>
+            </incDir>
+          </cTool>
+        </makeTool>
+      </makefileType>
+      <item path="src/assembly/gdt_flush.s" ex="true" tool="4" flavor="0">
+      </item>
+      <item path="src/assembly/idt_flush.s" ex="true" tool="4" flavor="0">
+      </item>
+      <item path="src/assembly/irq_asm.s" ex="true" tool="4" flavor="0">
+      </item>
+      <item path="src/assembly/isr_asm.s" ex="true" tool="4" flavor="0">
+      </item>
+      <item path="src/assembly/start.s" ex="true" tool="4" flavor="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
