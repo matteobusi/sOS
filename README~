@@ -1,6 +1,29 @@
 == SOS Operating System ==
 
-See the wiki for more informations about sOS:
-    * Basics, memory and tasking
 
-sOS Operating System, CodeName VoxOS - v.0.0.3 Step 1.7 Work in progress
+
+=== Release Notes ===
+
+This version (Codename Vox) is a work in progress version with in-kernel multithreading, to give the support to module loading.
+
+* Threads are managed by a non-reentrant circular list
+
+=== TODO ===
+
+==== For this version ====
+
+* Reimplement with B/R Trees the memory heap, to get better performances
+* (Maybe, to be evaluated) Implement priorities in multithreading
+* Make list reentrant (that's not necessary, because of the way the threading is implemented, but it may be useful for future uses)
+* Semaphores
+* Evaluate the best format for initrd (migration from proprietary to tar.gz)
+* Documentation
+
+==== Future versions ====
+
+(Sorted by implementation date)
+
+* SysCalls 
+* Configuration file - in the initrd, with format and so on...
+* Binary file loader, to ring 2 - to load modules (called server)
+* ... Refer to wiki...
