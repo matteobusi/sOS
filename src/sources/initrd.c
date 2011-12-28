@@ -1,10 +1,4 @@
-#include <commons.h>
-#include <system.h>
-#include <physman.h>
-#include <initrd.h>
-#include <panic.h>
-
-#include <stdout.h>
+#include <boot/initrd.h>
 
 #define MAGIC 0x425553
 

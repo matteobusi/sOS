@@ -1,10 +1,4 @@
-
-#include <system.h>
-#include <commons.h>
-#include <stdout.h>
-#include <idt.h>
-#include <panic.h>
-#include <isr.h>
+#include <interrupts/isr.h>
 
 void map_isr()
 {
@@ -45,6 +39,11 @@ void map_isr()
 void add_handler(unsigned char n, isr_t handler)
 {
     handlers_list[n] = handler;
+}
+
+void register_irq0(void* (*s)(void*))
+{
+    handlers_list[0]=s;
 }
 
 void exception_handler(struct registers reg)

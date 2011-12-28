@@ -9,6 +9,7 @@ start:
     jmp stublet
 
 align 4
+
 ;This kernel is Multiboot compliant!
 ;for reference http://www.gnu.org/software/grub/manual/multiboot/multiboot.html#Header-layout
 mboot:

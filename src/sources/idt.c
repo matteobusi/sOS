@@ -1,10 +1,5 @@
+#include <interrupts/idt.h>
 
-#include <idt.h>
-
-#include <system.h>
-#include <commons.h>
-#include <isr.h>
-#include <irq.h>
 
 void idt_set_gate(int index, unsigned int base, unsigned short selector, unsigned char flags)
 {

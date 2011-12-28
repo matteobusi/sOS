@@ -10,22 +10,47 @@
         <in>start.s</in>
       </df>
       <df name="headers">
-        <in>commons.h</in>
-        <in>gdt.h</in>
-        <in>graphics.h</in>
-        <in>heap.h</in>
-        <in>idt.h</in>
-        <in>initrd.h</in>
-        <in>irq.h</in>
-        <in>isr.h</in>
-        <in>multiboot.h</in>
-        <in>paging.h</in>
-        <in>panic.h</in>
-        <in>physman.h</in>
-        <in>pit.h</in>
-        <in>stdarg.h</in>
-        <in>stdout.h</in>
-        <in>system.h</in>
+        <df name="boot">
+          <in>initrd.h</in>
+          <in>multiboot.h</in>
+        </df>
+        <df name="clib">
+          <in>stdarg.h</in>
+          <in>stdout.h</in>
+          <in>system.h</in>
+        </df>
+        <df name="drivers">
+          <in>keyboard.h</in>
+        </df>
+        <df name="interrupts">
+          <in>idt.h</in>
+          <in>irq.h</in>
+          <in>isr.h</in>
+          <in>panic.h</in>
+          <in>pit.h</in>
+        </df>
+        <df name="memory">
+          <in>gdt.h</in>
+          <in>heap.h</in>
+          <in>paging.h</in>
+          <in>physman.h</in>
+        </df>
+        <df name="multitasking">
+          <in>task.h</in>
+        </df>
+        <df name="structures">
+          <in>linked_list.h</in>
+        </df>
+        <df name="utilities">
+          <in>commons.h</in>
+          <in>graphics.h</in>
+        </df>
+        <in>boot.h</in>
+        <in>clib.h</in>
+        <in>interrupts.h</in>
+        <in>memory.h</in>
+        <in>multitasking.h</in>
+        <in>utilities.h</in>
       </df>
       <df name="sources">
         <in>gdt.c</in>
@@ -35,6 +60,7 @@
         <in>initrd.c</in>
         <in>irq.c</in>
         <in>isr.c</in>
+        <in>linked_list.c</in>
         <in>main.c</in>
         <in>paging.c</in>
         <in>panic.c</in>
@@ -42,6 +68,7 @@
         <in>pit.c</in>
         <in>stdout.c</in>
         <in>system.c</in>
+        <in>task.c</in>
       </df>
     </df>
     <logicalFolder name="ExternalFiles"
@@ -92,6 +119,8 @@
       <item path="src/assembly/isr_asm.s" ex="true" tool="4" flavor="0">
       </item>
       <item path="src/assembly/start.s" ex="true" tool="4" flavor="0">
+      </item>
+      <item path="src/headers/drivers/keyboard.h" ex="true" tool="3" flavor="0">
       </item>
     </conf>
   </confs>

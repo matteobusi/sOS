@@ -1,3 +1,5 @@
+[bits 32]
+
 ; This macro creates a stub for an IRQ
 %macro IRQ 2
   global irq%1
@@ -8,7 +10,6 @@
     jmp irq_common_handler
 %endmacro
 
-IRQ 0, 32
 IRQ 1, 33
 IRQ 2, 34
 IRQ 3, 35
@@ -52,3 +53,34 @@ irq_common_handler:
     add esp,8
     sti
     iret
+
+extern schedule ;scheduling function..
+[GLOBAL irq0] ;irq0 requires a special handler...
+irq0:
+                pusha           ;push general registers onto stack
+                push ds         ;push ds on the stack
+                push es         ;push es
+                push fs         ;push fs
+                push gs         ;push gs
+
+                mov eax, 0x10   ;saves selector
+                mov ds, eax
+                mov es, eax
+                mov fs, eax
+                mov gs, eax
+
+                push esp        ;pushes esp
+
+                call schedule   ;schedule(eax) returns stack of next task
+                mov esp, eax    ;return value
+
+                mov al, 0x20    ;ack IRQ
+                out 0x20, al
+
+                pop gs          ;pop gs off task stack
+                pop fs          ;pop fs
+                pop es          ;pop es
+                pop ds          ;pop ds
+                popa            ;pop general registers
+
+                iret            ;interrupt return

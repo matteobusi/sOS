@@ -1,11 +1,6 @@
 
-#include <paging.h>
-#include <system.h>
-#include <physman.h>
-#include <irq.h>
-#include <isr.h>
-#include <panic.h>
-#include <heap.h>
+#include <memory/paging.h>
+
 
 struct page_dir* kernel_dir=0;
 struct page_dir* current_dir=0;

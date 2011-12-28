@@ -1,6 +1,5 @@
-#include <stdout.h>
-#include <stdarg.h>
-#include <system.h>
+#include <clib/stdout.h>
+
 
 unsigned short attrib = 0x07;
 unsigned short* videomem;
@@ -75,6 +74,12 @@ void putc(unsigned char ch)
     {
         x=0;
         y++;
+    }
+    else if(ch=='\t')
+    {
+        int i;
+        for(i=0; i < TAB_SPACING; i++)
+            putc(' ');
     }
     else if(ch == '\0')
     {

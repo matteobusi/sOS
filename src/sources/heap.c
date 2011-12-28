@@ -1,8 +1,5 @@
-#include <commons.h>
-#include <heap.h>
-#include <paging.h>
-#include <panic.h>
-#include <stdout.h>
+#include <memory/heap.h>
+
 
 //points *always* at the last allocated block
 struct mem_block_header* kernel_heap=(struct mem_block_header*)NULL;
@@ -118,7 +115,8 @@ void kfree(void* ptr) {
             }
     }
 
-    if(head->magic != HEAP_MAGIC) kpanic("Error while freeing memory: currupted or damaged memory!", (unsigned int)head, __FILE__, __LINE__);
+   // if(head->magic != HEAP_MAGIC) 
+     //   kpanic("Error while freeing memory: currupted or damaged memory!", (unsigned int)head, __FILE__, __LINE__);
 
     //now frees the chunk
     head->is_free=1;

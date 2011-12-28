@@ -1,11 +1,4 @@
-
-#include <isr.h>
-#include <system.h>
-#include <commons.h>
-#include <idt.h>
-#include <stdout.h>
-
-#include <irq.h>
+#include <interrupts/irq.h>
 
 void remap_IRQ()
 {
@@ -19,12 +12,12 @@ void remap_IRQ()
     outportb(PIC2_DATA, 0x02);
 
     outportb(PIC1_DATA, ICW4_8086);
-	outportb(PIC2_DATA, ICW4_8086);
+    outportb(PIC2_DATA, ICW4_8086);
 
-	outportb(PIC1_DATA, 0x0);
-	outportb(PIC2_DATA, 0x0);
+    outportb(PIC1_DATA, 0x0);
+    outportb(PIC2_DATA, 0x0);
 
-	//then it sets the entries in IDT
+    //then it sets the entries in IDT
     idt_set_gate(32, (unsigned int)irq0 , 0x08, 0x8E);
     idt_set_gate(33, (unsigned int)irq1 , 0x08, 0x8E);
     idt_set_gate(34, (unsigned int)irq2 , 0x08, 0x8E);

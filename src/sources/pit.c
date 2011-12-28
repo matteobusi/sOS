@@ -1,21 +1,13 @@
+#include <interrupts/pit.h>
 
-#include "pit.h"
-
-#include <commons.h>
-#include <stdout.h>
-#include <irq.h>
-#include <isr.h>
-#include <system.h>
 unsigned int tick=0;
 
-static void timer_handler(struct registers reg)
-{
-}
+extern void* schedule(unsigned int context);
 
 void init_timer(unsigned int frequency)
 {
     //adds the handler
-    add_handler(IRQ0, timer_handler);
+    register_irq0(schedule);
 
     unsigned int div = FREQ / frequency;
 

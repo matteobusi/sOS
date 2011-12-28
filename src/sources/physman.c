@@ -1,9 +1,5 @@
+#include <memory/physman.h>
 
-#include <physman.h>
-#include <system.h>
-#include <paging.h>
-#include <heap.h>
-#include <commons.h>
 
 extern unsigned int kend;
 extern unsigned int kernel_heap;
