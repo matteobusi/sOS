@@ -32,6 +32,9 @@ struct initrd_file_header
     int offset; /**< Offset from the start of the file section */
 };
 
+
+int is_initrd(void* memory_mapped_file);
+
 /**
  * Function to initialize InitRD module of the kernel
  * \return 0 success, other error

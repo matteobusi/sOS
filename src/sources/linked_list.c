@@ -18,7 +18,7 @@ struct task* next(struct list* lst)
 
 void add(struct task* tsk, struct list* lst)
 {
-    struct node* n=kmalloc(sizeof(struct node));
+    struct node* n=(struct node*)kmalloc(sizeof(struct node));
     n->value=tsk;
 
     if(lst->size==0)

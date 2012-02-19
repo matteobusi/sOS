@@ -1,8 +1,7 @@
-/* 
- * File:   utilities.h
- * Author: caos
- *
- * Created on 12 giugno 2011, 16.28
+/**
+ * All utilities for the kernel, like structures and graphical helper
+ * 
+ * \author Matteo Busi
  */
 
 #ifndef UTILITIES_H

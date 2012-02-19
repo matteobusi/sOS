@@ -122,7 +122,8 @@ void init_paging(unsigned int size)
 
     for(i=HEAP_BASE; i<HEAP_END; i+=PAGE_SIZE)
         alloc_frame(get_page(i, 1, kernel_dir), 0,0);
-
+    
+    init_heap();
     //adds fault handler for pagefault
     add_handler(14, page_fault);
     //loads and enable the kernel directory

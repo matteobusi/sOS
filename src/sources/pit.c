@@ -2,13 +2,10 @@
 
 unsigned int tick=0;
 
-extern void* schedule(unsigned int context);
+extern stack_t schedule(stack_t context);
 
 void init_timer(unsigned int frequency)
 {
-    //adds the handler
-    register_irq0(schedule);
-
     unsigned int div = FREQ / frequency;
 
     //sends the command to the pit

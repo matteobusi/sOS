@@ -6,18 +6,22 @@ unsigned int pid=0;
 void init_tasking()
 {
     tasks=make_list();
+    //adds the handler
+    add_schedule_function(schedule);
 }
 
 unsigned int tick_count()
 {
     return tick;
 }
+
+
 void print()
 { 
 
 }
 //TODO: Add priority queues
-unsigned int schedule(unsigned int context)
+stack_t schedule(stack_t context)
 {
     tick++;
     asm volatile("cli");
@@ -30,20 +34,30 @@ unsigned int schedule(unsigned int context)
     tasks->current->value->stack=context;
     next(tasks);
     if(tasks->current->value->state == ENDED)
-        remove(tasks->current, tasks);
+        remove(tasks->current->value, tasks);
 
     asm volatile("sti");
     return tasks->current->value->stack;
 }
 
-void clear_all()
+inline void exit(int status)
 {
+    asm volatile("cli");
+
+    struct task* current=tasks->current->value;
+    current->ret_value=status;
+    current->state=ENDED;
     
+    kprintf("Process %s exited with status [%d]\n", current->name, current->ret_value);
+    asm volatile("sti");
+    
+    for(;;); //now stop the process...it will be effectively deleted when the scheduler redo the context switch...
 }
 
-void add_task(char* name, int priority, void (*run)())
+
+void add_task(char* name, int priority, run_t run)
 {
-    if(name==(char*)NULL || strcmp(name, "")==0 || run==NULL)
+    if(name==(char*)NULL || strcmp(name, "")==0 || run==(run_t)NULL)
         return;
     
     asm volatile("cli"); //disable interrupts..
@@ -51,13 +65,13 @@ void add_task(char* name, int priority, void (*run)())
     unsigned int* stack;
     struct task* new_task=(struct task*)kmalloc(sizeof(struct task));
 
-    stack =(unsigned int*)(kmalloc_a(STACK_SIZE) + STACK_SIZE);//allocates 4096bytes...
+    stack =(unsigned int*)(kmalloc_a(4096));//allocates 4096bytes...
     if(stack == (unsigned int*)NULL)
-        kpanic("Error while creating space for a new stack", 0x0, __FILE__, __LINE__);
+        kpanic("Error while creating space for the new stack", 0x0, __FILE__, __LINE__);
 
     //because of the structure of x86, the stack grows downward, then
     //we set all data for task-switching...
-    *--stack = 0x0202;      // EFLAGS
+    *--stack=0x0202;
     *--stack = 0x08;        // CS - next instruction
     *--stack = (unsigned int)run;// EIP - this points to a function, to control the status of the task
 
@@ -73,6 +87,7 @@ void add_task(char* name, int priority, void (*run)())
 
     // data segments
     *--stack = 0x10;        // DS
+    
     *--stack = 0x10;        // ES
     *--stack = 0x10;        // FS
     *--stack = 0x10;        // GS

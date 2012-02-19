@@ -78,7 +78,7 @@ void putc(unsigned char ch)
     else if(ch=='\t')
     {
         int i;
-        for(i=0; i < TAB_SPACING; i++)
+        for(i=0; i < TAB_SPACES; i++)
             putc(' ');
     }
     else if(ch == '\0')

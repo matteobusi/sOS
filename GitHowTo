@@ -1,0 +1,15 @@
+Adding/removing/moving files
+
+git <cmd> filename <options...>
+
+Committing
+
+git commit -am "Message..."
+
+Updating local repository
+
+git pull origin master
+
+Updating remote repository
+
+git push origin -master

@@ -1,8 +1,17 @@
 #!/bin/sh
 
-MEM=1024
-KER=./bin/voxos.bin
-#IRD=./initrd.vos --> can be added, see version 1.7
+MEM=64
+#HDA=./HDD/wsfoxhd.img
+GRUB=./GRUB/*
+KER=./bin/sos.bin
+IRD=./test.bin
+FDA=./img/floppy.img
+
 #runs qemu!
-qemu -kernel $KER -m $MEM
+#sudo qemu-system-i386 -fda $FDA -m $MEM
+
+echo "# Running VirtualMachine..."
+#virtualbox --startvm sos --debug --start-running
+qemu-system-i386 -kernel $KER -initrd $IRD -m $MEM
+echo "# Run finished"
 #bochs

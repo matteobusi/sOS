@@ -3,6 +3,7 @@
 
 void kpanic(char* error_string, int address_violation, char* file, int line)
 {
+    asm volatile("cli");
     //white on red
     set_color(4, 15);
     clear();
@@ -14,6 +15,7 @@ void kpanic(char* error_string, int address_violation, char* file, int line)
 
 void kexception(int err_no, int int_no)
 {
+    asm volatile("cli");
     //white on red
     set_color(4, 15);
     clear();

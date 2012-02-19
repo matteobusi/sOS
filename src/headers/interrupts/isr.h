@@ -9,7 +9,10 @@
 #include <idt.h>
 #include <panic.h>
 
+typedef unsigned int stack_t;
+
 typedef void (*isr_t)(struct registers reg);
+typedef stack_t (*schedule_f_t)(stack_t context);
 isr_t handlers_list[IDT_LEN];
 
 
@@ -53,5 +56,5 @@ extern void map_isr();
 extern void exception_handler(struct registers reg);
 //ISR handler adder
 extern void add_handler(unsigned char n, isr_t handler);
-extern void register_irq0(void* (*s)(void*));
+extern void add_schedule_function(schedule_f_t scheduler);
 #endif // ISR_H_INCLUDED

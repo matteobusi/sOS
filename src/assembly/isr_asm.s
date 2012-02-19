@@ -1,5 +1,5 @@
 ;This is a NASM-specific macro to code less in ASM
-;It's generates different functions for 32 cases of 32 different interrupts w/ or w/o error codes on the stack
+;It generates different functions for 32 cases of 32 different interrupts w/ or w/o error codes on the stack
 ;Thanks for this macro to http://www.jamesmolloy.co.uk/
 
 %macro ISR_NOERRCODE 1

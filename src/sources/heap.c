@@ -1,6 +1,5 @@
 #include <memory/heap.h>
 
-
 //points *always* at the last allocated block
 struct mem_block_header* kernel_heap=(struct mem_block_header*)NULL;
 //

@@ -3,9 +3,10 @@
 [BITS 32]
 
 global start
+INIT_STACK_SIZE equ 0x10000
 ;Start function
 start:
-    mov esp, _sys_stack+0x10000 ;the ESP registers contains _sys_stack
+    mov esp, _sys_stack+INIT_STACK_SIZE ;the ESP registers contains _sys_stack
     jmp stublet
 
 align 4
@@ -44,4 +45,4 @@ stublet:
     jmp $
 section .bss
 _sys_stack:
-    resb 0x10000 ;16KB stack
+    resb INIT_STACK_SIZE ;16KB stack

@@ -1,8 +1,7 @@
-/* 
- * File:   multitasking.h
- * Author: caos
- *
- * Created on 12 giugno 2011, 16.28
+/**
+ * All multitasking related libraries...
+ * 
+ * \author Matteo Busi
  */
 
 #ifndef MULTITASKING_H

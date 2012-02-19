@@ -1,8 +1,7 @@
-/* 
- * File:   memory.h
- * Author: caos
- *
- * Created on 12 giugno 2011, 16.27
+/**
+ * Everything related with memory management, from the "basic" level of the GDT to the upper, the heap
+ * 
+ * \author Matteo Busi
  */
 
 #ifndef MEMORY_H

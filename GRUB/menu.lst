@@ -1,6 +1,6 @@
-timeout 1
+timeout 5
 
-title	VoxOS
+title	sOS
 	root (fd0)
 	kernel /kernel
 	module /initrd

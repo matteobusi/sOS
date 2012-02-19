@@ -1,10 +1,8 @@
-/* 
- * File:   clib.h
- * Author: caos
- *
- * Created on 12 giugno 2011, 16.27
+/**
+ * "Standard" library for the kernel-core, it contains functions for output, memory, I/O ports and data structures
+ * 
+ * \author Matteo Busi
  */
-
 #ifndef CLIB_H
 #define	CLIB_H
 

@@ -8,7 +8,7 @@
 #define LINES 25
 #define PAGES 8
 
-#define TAB_SPACING 4
+#define TAB_SPACES 4
 
 //Should be self-explanatory
 void init_video();

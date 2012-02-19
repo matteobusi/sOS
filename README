@@ -12,17 +12,20 @@ This version (Codename Vox) is a work in progress version with in-kernel multith
 
 ==== For this version ====
 
-* Reimplement with B/R Trees the memory heap, to get better performances
-* (Maybe, to be evaluated) Implement priorities in multithreading
-* Make list reentrant (that's not necessary, because of the way the threading is implemented, but it may be useful for future uses)
-* Semaphores
-* Evaluate the best format for initrd (migration from proprietary to tar.gz)
+* Keyboard driver
+* Console application
 * Documentation
 
 ==== Future versions ====
 
 (Sorted by implementation date)
 
+
+* Reimplement with B/R Trees the memory heap, to get better performance
+* (Maybe, to be evaluated) Implement priorities in multithreading
+* Make list reentrant (that's not necessary, because of the way the threading is implemented, but it may be useful for future uses)
+* Semaphores
+* Evaluate the best format for initrd (migration from proprietary to tar.gz)
 * SysCalls 
 * Configuration file - in the initrd, with format and so on...
 * Binary file loader, to ring 2 - to load modules (called server)

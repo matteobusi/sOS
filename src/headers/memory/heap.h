@@ -16,7 +16,8 @@
 
 //Base and max addresses of the kernel heap - from HEAP_BASE to the end of memory
 #define HEAP_BASE 0xC0000000
-#define HEAP_END  0xF0000000
+#define HEAP_INIT 0x100000
+#define HEAP_END HEAP_BASE + HEAP_INIT
 
 //Magic Heap Number
 #define HEAP_MAGIC 0xdeadbeef

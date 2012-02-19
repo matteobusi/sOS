@@ -1,5 +1,13 @@
+/**
+ * STDARG Lib, used to create functions with dynamic parameters:
+ * as said by DMR (RIP :( ) "You are not expected to undestand this"
+ * 
+ * \author Matteo Busi
+ */
+
 #ifndef STDARG_H_INCLUDED
 #define STDARG_H_INCLUDED
+
 
 typedef char *va_list;
 

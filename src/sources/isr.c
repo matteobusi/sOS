@@ -41,9 +41,9 @@ void add_handler(unsigned char n, isr_t handler)
     handlers_list[n] = handler;
 }
 
-void register_irq0(void* (*s)(void*))
+void add_schedule_function(schedule_f_t scheduler)
 {
-    handlers_list[0]=s;
+    handlers_list[IRQ0] = (isr_t)scheduler;
 }
 
 void exception_handler(struct registers reg)

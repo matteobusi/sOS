@@ -1,8 +1,7 @@
-/* 
- * File:   interrupts.h
- * Author: caos
- *
- * Created on 12 giugno 2011, 16.27
+/**
+ * Header containing all functions regarding hardware interrupts, so exception handlers, interrupt descriptor table, IRQs and panic functions
+ * 
+ * \author Matteo Busi
  */
 
 #ifndef INTERRUPTS_H

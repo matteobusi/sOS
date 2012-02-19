@@ -8,7 +8,12 @@
 #ifndef KEYBOARD_H
 #define	KEYBOARD_H
 
+typedef char byte; ///< 
 
+void keyboard_isr()
+{
+    byte 
+}
 
 #endif	/* KEYBOARD_H */
 

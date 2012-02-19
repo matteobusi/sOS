@@ -11,32 +11,35 @@
 #include <../memory.h>
 #include <../clib.h>
 
+typedef unsigned int stack_t;
 
-
-#define STACK_SIZE 0x1000
 enum STATE { READY=0, RUNNING=1, ENDED=2};
+
+typedef void (*run_t)(int argc, char **argv);
+
 extern unsigned int tick;
 
 struct task
 {
     unsigned int pid; //the unique ID for the current task..
-    unsigned int stack;
+    stack_t stack;
     enum STATE state; //All possible states, in the enum..
     char name[50]; //The name for the process...
     int priority; //an ascending value
+    int ret_value;
     //FILE* res[]; 
-    void (*run)(); //a function pointer to the real task in memory
+    run_t run; //a function pointer to the real task in memory
 };
 
 unsigned int tick_count();
 
 void init_tasking();
 struct task* next_task(int p);
-void kill_me();
+void exit(int status);
 void wait(unsigned int time);
 unsigned int size(int p);
-unsigned int schedule(unsigned int context);
-void add_task(char* name, int priority, void (*run)());
+stack_t schedule(stack_t context);
+void add_task(char* name, int priority, run_t run);
 
 #endif	/* TASK_H */
 

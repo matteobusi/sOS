@@ -10,7 +10,7 @@ CSOURCES=$(wildcard ./src/sources/*.c)
 OBJECTS=$(SSOURCES:.s=.o) $(CSOURCES:.c=.o)
 
 #Executable name
-EXEC=./bin/voxos.bin
+EXEC=./bin/sos.bin
 
 all: $(OBJECTS) link
 

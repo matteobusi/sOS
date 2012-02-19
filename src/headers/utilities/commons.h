@@ -1,6 +1,6 @@
 //Automatically included in system.h
-#ifndef CONST_H_INCLUDED
-#define CONST_H_INCLUDED
+#ifndef COMMONS_INCLUDED
+#define COMMONS_INCLUDED
 #define NULL ((char*) 0)
 
 struct registers{
@@ -10,4 +10,5 @@ struct registers{
     unsigned int eip, cs, eflags, useresp, ss; //Iret
 };
 
-#endif // CONST_H_INCLUDED
+
+#endif // COMMONS_INCLUDED

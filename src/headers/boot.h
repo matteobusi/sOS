@@ -1,8 +1,7 @@
-/* 
- * File:   boot.h
- * Author: caos
- *
- * Created on 12 giugno 2011, 16.27
+/**
+ * Container of all "libraries" related with the computer boot.
+ * 
+ * \author Matteo Busi, multiboot.h from GNU Foundation
  */
 
 #ifndef BOOT_H

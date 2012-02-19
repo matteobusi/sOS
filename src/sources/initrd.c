@@ -3,13 +3,24 @@
 #define MAGIC 0x425553
 
 //Builds a fs header and a file_header array
-struct initrd_header fs_header;
+struct initrd_header* fs_header;
 struct initrd_file_header* fs_files;
+
+int is_initrd(void* memory_mapped_file)
+{
+    struct initrd_header* header=(struct initrd_header*)kmalloc(sizeof(struct initrd_header));
+    unsigned char* file = (unsigned char*) memory_mapped_file;
+    fill_header(header, file);
+    int ret=(header->magic == MAGIC);
+    kfree(header);
+    return ret;
+}
 
 int init_initrd(void* memory_mapped_file, struct initrd_header* fs_header, struct initrd_file_header** fs_files)
 {
    unsigned char* file = (unsigned char*) memory_mapped_file;
    fill_header(fs_header, file);
+   kprintf("MAGIC: 0x%h\n", fs_header->magic);
    if(fs_header->magic != MAGIC)
        return -1;
    
