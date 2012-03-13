@@ -1,10 +1,10 @@
 #!/bin/sh
 
-MEM=64
+MEM=1024
 #HDA=./HDD/wsfoxhd.img
 GRUB=./GRUB/*
 KER=./bin/sos.bin
-IRD=./test.bin
+IRD=./test
 FDA=./img/floppy.img
 
 #runs qemu!

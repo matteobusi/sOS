@@ -1,6 +1,9 @@
 #include <clib/stdout.h>
 
 
+#define NUM_CHAR '0'
+#define STR_CHAR ' '
+
 unsigned short attrib = 0x07;
 unsigned short* videomem;
 
@@ -163,7 +166,7 @@ int kprintf(char* arg, ...)
 {
     va_list argp;
     va_start(argp, arg);
-    char* s;
+    char* s='\0';
     int d;
     char c;
     int sum=0;
@@ -206,11 +209,62 @@ int kprintf(char* arg, ...)
                     putc(c);
                     sum++;
                 break;
-
                 default:
-                    putc('%');
-                    putc(*arg);
-                    sum +=2;
+                {
+                    if(isdigit(*arg))
+                    {
+                        int len;
+                        int tmp=atoi(arg, &len), count=0;
+                        char dest[12];
+                        arg+=len;
+                        if(*arg=='d')
+                        {
+                                d=va_arg(argp, int);
+                                count=itoa(d, 10, dest);
+                        }
+                        else if(*arg=='h')
+                        {
+                                d=va_arg(argp, unsigned int);
+                                count=utoa(d, 16, dest);
+                        }
+                        else if(*arg=='u')
+                        {
+                                d=va_arg(argp, int);
+                                count=utoa(d, 10, dest);
+                        }
+                        else if(*arg=='s')
+                        {
+                                s=va_arg(argp, char*);
+                                count =strlen(s);
+                        }
+                        
+                        if(*arg!='s')
+                        {
+                            int i;
+                            for(i=0; i < tmp-count; i++)
+                                putc(NUM_CHAR);
+                            puts(dest);
+                            sum+=tmp;
+                        }
+                        else
+                        {
+                            int i;
+                            int leading=(tmp-count)/2;
+                            for(i=0; i < leading; i++)
+                                putc(STR_CHAR);
+                            puts(s);
+                            for(i=0; i < tmp-count -leading; i++)
+                                putc(STR_CHAR);
+                        }
+                    }
+                    else
+                    {
+                        putc('%');
+                        putc(*arg);
+                        sum +=2;   
+                    }
+                }
+                break;
             }
         }
         else

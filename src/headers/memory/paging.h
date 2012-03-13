@@ -9,7 +9,7 @@
 
 #define BIT2INDEX(a) (a/(4*8))
 #define BIT2OFFSET(a) (a%(8*4))
-#define ADDRESS(i,j) (i*8*4+j)
+#define ADDRESS(i,j) (i*4*8+j)
 
 
 #define PAGE_SIZE 4096
@@ -50,5 +50,7 @@ void load_dir(struct page_dir* directory);
 //new if <newpage> == 1
 //in <directory> dir
 struct page* get_page(unsigned int address, int new_page, struct page_dir* directory);
+
+struct page_dir *clone_directory(const struct page_dir* src);
 
 #endif // PAGING_H_INCLUDED

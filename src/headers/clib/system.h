@@ -20,19 +20,25 @@
     outportb
 */
 
-extern void* memcpy(void* dest, const void* src, int count);
-extern void* memset(void* dest, char val, int count);
-extern unsigned short* memsetw(unsigned short* dest, unsigned short val, int count);
+void* memcpy(void* dest, const void* src, int count);
+void* memset(void* dest, char val, int count);
+unsigned short* memsetw(unsigned short* dest, unsigned short val, int count);
 
-extern int strlen(const char* str);
-extern void strcpy(char* dest, const char* source);
-extern int strcmp(const char* a, const char* b);
-extern void strcat(char* dest, const char* source);
-extern void strrev(char* dest);
+int strlen(const char* str);
+void strcpy(char* dest, const char* source);
+int strcmp(const char* a, const char* b);
+void strcat(char* dest, const char* source);
+void strrev(char* dest);
 
-extern unsigned char inportb (unsigned short _port);
-extern void outportb (unsigned short _port, unsigned char _data);
+unsigned char inportb (unsigned short _port);
+void outportb (unsigned short _port, unsigned char _data);
 
+int isdigit(char c);
 
+// kmalloc used! memory to be freed
+int itoa(int number, int base, char* dest);
+int utoa(unsigned int number, int base, char* dest);
+
+int atoi(char* str, int* len);
 
 #endif // SYSTEM_H_INCLUDED

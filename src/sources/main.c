@@ -29,15 +29,32 @@ extern unsigned int kend;
 
 multiboot_info_t* mboot_ptr;
 
-void file_loader(int argc, char** argv)
-{
-    int start = ((multiboot_module_t*)mboot_ptr->mods_addr)->mod_start;
-    int size=(((multiboot_module_t*)mboot_ptr->mods_addr)->mod_end)-(((multiboot_module_t*)mboot_ptr->mods_addr)->mod_start);
-    void* dest = kmalloc(size);
-    memcpy(dest, (int*)start, size);
-    void (*ep)()=dest;
-    add_task("module1", 0, ep);
+int file_loader(int argc, char** argv) {
     
+    kprintf("%d arguments:\n", argc);
+    int i;
+    for(i=0; i < argc; i++)
+        kprintf("\targv[%d]:%s\n", i, argv[i]);
+    
+    int start = ((multiboot_module_t*) mboot_ptr->mods_addr)->mod_start;
+    int size = (((multiboot_module_t*) mboot_ptr->mods_addr)->mod_end)-(((multiboot_module_t*) mboot_ptr->mods_addr)->mod_start);
+
+    void* dest = (void*)kmalloc(size);
+    memcpy(dest, (int*) start, size);
+    
+    run_t entry=load_ELF(dest);
+    
+    if(entry==(run_t)NULL && last_err()!=NO_ERR)
+        kprintf("Error while loading file: %d\n", last_err());
+    else
+    {
+        char name[50]="loaded_elf0";
+        add_task(name, 0, entry, 0, (char**)NULL);
+    }
+    kfree(dest);
+    
+    //load the elf file... it's a module!
+
     /*
     if(!(mboot_ptr->flags & MULTIBOOT_INFO_MODS))
     {
@@ -78,60 +95,59 @@ void file_loader(int argc, char** argv)
 
     //frees resources
     kfree(fs_files);
-    */
-    exit(0);
+     */
+    return 0;
 }
 
-int kmain(unsigned int magic_number, void* m_boot_addr)
-{
+int kmain(unsigned int magic_number, void* m_boot_addr) {
     mboot_ptr = (multiboot_info_t*) m_boot_addr;
 
     //Init GDT, IDT and Video
     init_video();
     //Clears the screen
     clear();
-    init_effect("Video");
     print_logo();
     init_gdt();
     init_effect("Global Descriptor Table");
     init_idt();
     init_effect("Interrupt Descriptor Table");
-    
-    if(magic_number != MULTIBOOT_BOOTLOADER_MAGIC)
-        kpanic("I'm a multiboot-compliant OS and I need a multiboot BootLoader! :(", 0x0,__FILE__, __LINE__);
-    
+
+    if (magic_number != MULTIBOOT_BOOTLOADER_MAGIC)
+        kpanic("I'm a multiboot-compliant OS and I need a multiboot BootLoader! :(", 0x0, __FILE__, __LINE__);
+
     //init the timer with a frequecy of 200Hz
-    init_timer(200);
+    init_timer(100);
     init_effect("Timer");
     //enables paging...
-    
-    unsigned int initrd_end = ((multiboot_module_t*)mboot_ptr->mods_addr)->mod_end;
+
+    unsigned int initrd_end = ((multiboot_module_t*) mboot_ptr->mods_addr)->mod_end;
     //since we have to load the initrd, we should move ahead this address
-    if((mboot_ptr->flags & MULTIBOOT_INFO_MODS) && mboot_ptr->mods_count>0)
+    if ((mboot_ptr->flags & MULTIBOOT_INFO_MODS) && mboot_ptr->mods_count > 0)
         init_address = initrd_end;
     else
-        init_address = (unsigned int)&kend;
-    
+        init_address = (unsigned int) &kend;
+
     init_paging(mboot_ptr->mem_upper * 1024 - init_address);
 
     init_effect("Paging");
-        
+
     //heap created with paging, just show we created it...
     init_effect("Heap");
     kprintf("\n");
     memory_info(mboot_ptr);
-    
-    init_tasking();
-    init_effect("Kernel Threads");
-    
-    add_task("kernel", 0, (run_t)kmain); //Adding the kernel task, everything starts here :)
-    init_effect("\tkernel");        
 
+    init_tasking();
+    init_effect("Multitasking");
+    
     //Enables interrupts...
     asm volatile("sti");
-    
-    add_task("file_loader", 0, file_loader);
-    init_effect("\tfile_loader");        
+    add_task("kernel", 0, (run_t) kmain, 0, (char**)NULL); //Adding the kernel task, everything starts here :)
+    init_effect("\tkernel");
+
+    char* par[3]={"Uno", "Due", "Tre"};
+    add_task("file_loader", 0, file_loader, 3, par);
+    init_effect("\tfile_loader");
+        
     for(;;);
     return 0;
 }

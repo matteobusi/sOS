@@ -73,6 +73,71 @@ void strrev(char* str)
     }
 }
 
+int isdigit(char c)
+{
+    if(c >= '0' && c <= '9')
+        return 1;
+    return 0;
+}
+
+int atoi(char* str, int* len)
+{
+    int i=0, ret=0, mul=1;
+    if(str[i]=='-')
+    {   
+        mul=-mul;
+        i++;
+    }
+    
+    while(isdigit(str[i]))
+    {
+        ret*=10;
+        ret+=str[i]-'0';
+        i++;
+    }
+    *len=i;
+    return ret*mul;
+}
+
+int itoa(int number, int base, char* dest)
+{
+    static char* digits = "0123456789ABCDEF";
+    int i=0, negative=0;
+    if(number < 0)
+    {
+        number = -number;
+        negative = 1;
+    }
+    do
+    {
+        dest[i++] = digits[number%base];
+    }while((number /= base) >0);
+
+    if(negative)
+        dest[i++] = '-';
+
+    dest[i++] = '\0';
+
+    strrev(dest);
+    return i-1;
+}
+
+int utoa(unsigned int number, int base, char* dest)
+{
+    static char* digits = "0123456789ABCDEF";
+    int i=0;
+    do
+    {
+        dest[i++] = digits[number%base];
+    }while((number /= base) >0);
+
+    dest[i++] = '\0';
+
+    strrev(dest);
+    return i-1;
+}
+
+
 unsigned char inportb (unsigned short _port)
 {
     unsigned char rv;

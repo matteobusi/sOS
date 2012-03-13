@@ -101,7 +101,7 @@ void kfree(void* ptr) {
 
     struct mem_block_header* head = (struct mem_block_header*)(ptr-sizeof(struct mem_block_header));
 
-    //TODO: find a better way...althought this is O(1), at most uses PAGE_SIZE steps
+    //TODO: find a better way...althought this is O(PAGE_SIZE), at most uses PAGE_SIZE steps
     if((int)ptr%PAGE_SIZE == 0)
     {
         //searches the header...
@@ -114,8 +114,8 @@ void kfree(void* ptr) {
             }
     }
 
-   // if(head->magic != HEAP_MAGIC) 
-     //   kpanic("Error while freeing memory: currupted or damaged memory!", (unsigned int)head, __FILE__, __LINE__);
+    if(head->magic != HEAP_MAGIC) 
+        kpanic("Error while freeing memory: currupted or damaged memory!", (unsigned int)head, __FILE__, __LINE__);
 
     //now frees the chunk
     head->is_free=1;

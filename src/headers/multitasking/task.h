@@ -15,7 +15,7 @@ typedef unsigned int stack_t;
 
 enum STATE { READY=0, RUNNING=1, ENDED=2};
 
-typedef void (*run_t)(int argc, char **argv);
+typedef int (*run_t)(int argc, char **argv);
 
 extern unsigned int tick;
 
@@ -28,7 +28,10 @@ struct task
     int priority; //an ascending value
     int ret_value;
     //FILE* res[]; 
+    struct page_dir* directory;
     run_t run; //a function pointer to the real task in memory
+    int argc;
+    char **argv;
 };
 
 unsigned int tick_count();
@@ -39,7 +42,9 @@ void exit(int status);
 void wait(unsigned int time);
 unsigned int size(int p);
 stack_t schedule(stack_t context);
-void add_task(char* name, int priority, run_t run);
+void add_task(char* name, int priority, run_t run, int argc, char** argv);
+
+void dummy();
 
 #endif	/* TASK_H */
 

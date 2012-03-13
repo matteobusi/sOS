@@ -1,28 +1,13 @@
 
 #include <utilities/graphics.h>
 
-static void print_offset(int n)
+void print_logo()
 {
-    set_color(0,7);
+    char logo[][50]= {" ", "SOS - A multitaking simple hybrid kernel",
+                      "Version 0.0.1"};
     int i;
-    for(i=0; i  < n; i++)
-        kprintf(" ");
-    set_color(7,0);
-}
-
-extern void print_logo()
-{
-    char logo[][50]= {" *** SoS * VoxOS * Step 2.1 ***\n",
-                      "Building a basic multitasking OS based\n",
-                      "on Round-Robin Scheduling with priorities\n",
-                      "Released under GNU GPL2\n"};
-    int i;
-    for(i=0; i < 4; i++)
-    {
-        print_offset((COLUMNS-strlen(logo[i]))/2);
-        kprintf(logo[i]);
-    }
-    set_color(0,7);
+    for(i=0; i < 3; i++)
+        kprintf("%80s", logo[i]);    
 }
 
 void memory_info(void* m_boot_addr)

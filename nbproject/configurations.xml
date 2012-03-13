@@ -7,6 +7,7 @@
         <in>idt_flush.s</in>
         <in>irq_asm.s</in>
         <in>isr_asm.s</in>
+        <in>pagecopy.s</in>
         <in>start.s</in>
       </df>
       <df name="headers">
@@ -21,6 +22,9 @@
         </df>
         <df name="drivers">
           <in>keyboard.h</in>
+        </df>
+        <df name="executables">
+          <in>elf.h</in>
         </df>
         <df name="interrupts">
           <in>idt.h</in>
@@ -54,6 +58,7 @@
         <in>utilities.h</in>
       </df>
       <df name="sources">
+        <in>elf.c</in>
         <in>gdt.c</in>
         <in>graphics.c</in>
         <in>heap.c</in>
