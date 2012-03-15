@@ -44,8 +44,7 @@ run_t load_ELF(void* mapped_exec)
         memcpy(elf->program_headers[i], mapped_exec+elf->elf_header->e_phoff+i*elf->elf_header->e_phentsize, elf->elf_header->e_phentsize);
     }
     
-    
-    unsigned int size=elf->program_headers[0]->p_memsz;
+    unsigned int size=2*elf->program_headers[0]->p_memsz; //TODO
     elf->program_image=(void*)kmalloc(size);
     if(elf->program_image==NULL)
     {
@@ -54,9 +53,10 @@ run_t load_ELF(void* mapped_exec)
     }
     
      for(i=0; i < elf->elf_header->e_phnum; i++)
+         if(elf->program_headers[i]->p_type==PT_LOAD)
             memcpy(elf->program_image+elf->program_headers[i]->p_offset, mapped_exec+elf->program_headers[i]->p_offset, elf->program_headers[i]->p_memsz);
     
-    return (run_t)(elf->program_image);
+     return (run_t)(elf->program_image+elf->program_headers[0]->p_offset+elf->elf_header->e_entry);
 }
 
 int last_err()

@@ -1,4 +1,4 @@
-/***
+/*
  *
  *                   ,----..                                                            .--,-``-.
  *                  /   /   \    .--.--.                  ,----..        ,----..      /   /     '.
@@ -51,7 +51,8 @@ int file_loader(int argc, char** argv) {
         char name[50]="loaded_elf0";
         add_task(name, 0, entry, 0, (char**)NULL);
     }
-    kfree(dest);
+
+    //kfree(dest);
     
     //load the elf file... it's a module!
 
