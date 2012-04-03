@@ -1,6 +1,6 @@
 timeout 5
 
-title	sOS
+title	sOS kernel
 	root (fd0)
 	kernel /kernel
 	module /initrd

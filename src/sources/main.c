@@ -24,6 +24,8 @@
 #include <multitasking.h>
 #include <utilities.h>
 
+#include <userland/ring.h>
+
 extern unsigned int init_address;
 extern unsigned int kend;
 
@@ -144,11 +146,12 @@ int kmain(unsigned int magic_number, void* m_boot_addr) {
     asm volatile("sti");
     add_task("kernel", 0, (run_t) kmain, 0, (char**)NULL); //Adding the kernel task, everything starts here :)
     init_effect("\tkernel");
-
-    char* par[3]={"Uno", "Due", "Tre"};
-    add_task("file_loader", 0, file_loader, 3, par);
+    
+    add_task("file_loader", 0, file_loader, 0, NULL);
     init_effect("\tfile_loader");
         
+    //switch_ring(KERNEL_RING); //switching to user and halting!
+    
     for(;;);
     return 0;
 }

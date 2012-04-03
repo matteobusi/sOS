@@ -46,6 +46,9 @@
           <in>br_tree.h</in>
           <in>linked_list.h</in>
         </df>
+        <df name="userland">
+          <in>ring.h</in>
+        </df>
         <df name="utilities">
           <in>commons.h</in>
           <in>graphics.h</in>
@@ -72,6 +75,7 @@
         <in>panic.c</in>
         <in>physman.c</in>
         <in>pit.c</in>
+        <in>ring.c</in>
         <in>stdout.c</in>
         <in>system.c</in>
         <in>task.c</in>

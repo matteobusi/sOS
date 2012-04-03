@@ -19,7 +19,7 @@ void kexception(int err_no, int int_no)
     set_color(4, 15);
     clear();
     kprintf("*****ERROR - NON-MANAGED EXCEPTION!*****\n");
-    kprintf("EXCEPTION NO: %d\nINTERRUPT NO: %d\n*****SYSTEM HALTED!*****\n\n",err_no, int_no );
+    kprintf("EXCEPTION NO: 0x%h\nINTERRUPT NO: 0x%h\n*****SYSTEM HALTED!*****\n\n",err_no, int_no );
     for(;;);
     asm volatile("cli;hlt");
 }

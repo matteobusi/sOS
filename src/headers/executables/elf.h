@@ -16,6 +16,7 @@
 #define ARCH_ERR 2
 #define VER_ERR 3
 #define MEM_ERR 4
+
 /*
  * In this code we refer to paper at http://flint.cs.yale.edu/cs422/doc/ELF_Format.pdf and we define data type as defined at
  * page 8.
@@ -188,8 +189,8 @@ struct Elf32
 run_t load_ELF(void* mapped_exec);
 
 /*
- * This function returns the last error done by the loadELF functions, possible errors are defined by various defines
- * NO_ERR, MAGIC_ERR and GENERIC_ERR
+ * This function returns the last error done by the loadELF functions, 
+ * possible error codes are specified in this file by *_ERR defines
  */
 int last_err();
 #endif	/* ELF_H */
