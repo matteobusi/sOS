@@ -33,72 +33,6 @@ multiboot_info_t* mboot_ptr;
 
 int file_loader(int argc, char** argv) {
     
-    kprintf("%d arguments:\n", argc);
-    int i;
-    for(i=0; i < argc; i++)
-        kprintf("\targv[%d]:%s\n", i, argv[i]);
-    
-    int start = ((multiboot_module_t*) mboot_ptr->mods_addr)->mod_start;
-    int size = (((multiboot_module_t*) mboot_ptr->mods_addr)->mod_end)-(((multiboot_module_t*) mboot_ptr->mods_addr)->mod_start);
-
-    void* dest = (void*)kmalloc(size);
-    memcpy(dest, (int*) start, size);
-    
-    run_t entry=load_ELF(dest);
-    
-    if(entry==(run_t)NULL && last_err()!=NO_ERR)
-        kprintf("Error while loading file: %d\n", last_err());
-    else
-    {
-        char name[50]="loaded_elf0";
-        add_task(name, 0, entry, 0, (char**)NULL);
-    }
-
-    //kfree(dest);
-    
-    //load the elf file... it's a module!
-
-    /*
-    if(!(mboot_ptr->flags & MULTIBOOT_INFO_MODS))
-    {
-        kprintf("No modules to load...");
-        exit(-1);
-    }
-    
-    kprintf("Trying to load the InitRD:\n");
-
-    unsigned int initrd_location = ((multiboot_module_t*)mboot_ptr->mods_addr)->mod_start;
-
-          
-    //the first module *must* be the initrd
-    
-    struct initrd_header fs_header;
-
-    //initialized in init_initrd - it has to be freed up after being used
-    struct initrd_file_header* fs_files;
-    //
-    if(init_initrd((void*)initrd_location, &fs_header, &fs_files)==-1)
-    {
-        kprintf("Error while loading initRD module: invalid magic number\n");
-        exit(-1);
-    }
-    
-    char** files_list=(char**)kmalloc(sizeof(char*)*fs_header.n_files);
-    
-    int n=list(files_list, fs_files, &fs_header);
-    int i=0;
-    //for(i=0; i < n; i++)
-    {
-        void* content=read(files_list[i], fs_files, &fs_header, (unsigned char*)initrd_location);
-        run_t ep=content;
-        char* par[]={"a", "b"};
-        ep(3, par);
-        //add_task("task1", 0, ep);
-    }
-
-    //frees resources
-    kfree(fs_files);
-     */
     return 0;
 }
 
@@ -114,7 +48,7 @@ int kmain(unsigned int magic_number, void* m_boot_addr) {
     init_effect("Global Descriptor Table");
     init_idt();
     init_effect("Interrupt Descriptor Table");
-
+    
     if (magic_number != MULTIBOOT_BOOTLOADER_MAGIC)
         kpanic("I'm a multiboot-compliant OS and I need a multiboot BootLoader! :(", 0x0, __FILE__, __LINE__);
 
@@ -124,7 +58,7 @@ int kmain(unsigned int magic_number, void* m_boot_addr) {
     //enables paging...
 
     unsigned int initrd_end = ((multiboot_module_t*) mboot_ptr->mods_addr)->mod_end;
-    //since we have to load the initrd, we should move ahead this address
+    //since we have to load the initrd, we should move ahead the init address
     if ((mboot_ptr->flags & MULTIBOOT_INFO_MODS) && mboot_ptr->mods_count > 0)
         init_address = initrd_end;
     else
@@ -146,11 +80,14 @@ int kmain(unsigned int magic_number, void* m_boot_addr) {
     asm volatile("sti");
     add_task("kernel", 0, (run_t) kmain, 0, (char**)NULL); //Adding the kernel task, everything starts here :)
     init_effect("\tkernel");
-    
-    add_task("file_loader", 0, file_loader, 0, NULL);
-    init_effect("\tfile_loader");
         
-    //switch_ring(KERNEL_RING); //switching to user and halting!
+    add_task("file_loader", 0, file_loader, 0, (char**)NULL);
+    init_effect("\tfile_loader");
+    
+    init_effect("User mode");
+    switch_to_user();
+    
+    
     
     for(;;);
     return 0;

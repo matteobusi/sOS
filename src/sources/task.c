@@ -1,6 +1,5 @@
 #include <multitasking.h>
 
-struct list* tasks;
 unsigned int pid=0;
 
 extern struct page_dir* current_dir;
@@ -18,12 +17,11 @@ unsigned int tick_count()
     return tick;
 }
 
-
-void print()
-{ 
-
+unsigned int get_pid()
+{
+    return  tasks->current->value->pid;
 }
-//TODO: Add priority queues
+
 stack_t schedule(stack_t context)
 {
     tick++;

@@ -23,3 +23,6 @@ void kexception(int err_no, int int_no)
     for(;;);
     asm volatile("cli;hlt");
 }
+
+inline void debug()
+{ asm volatile("cli;hlt");}

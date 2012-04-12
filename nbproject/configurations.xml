@@ -48,6 +48,7 @@
         </df>
         <df name="userland">
           <in>ring.h</in>
+          <in>tss.h</in>
         </df>
         <df name="utilities">
           <in>commons.h</in>
@@ -58,6 +59,7 @@
         <in>interrupts.h</in>
         <in>memory.h</in>
         <in>multitasking.h</in>
+        <in>userland.h</in>
         <in>utilities.h</in>
       </df>
       <df name="sources">
@@ -79,6 +81,7 @@
         <in>stdout.c</in>
         <in>system.c</in>
         <in>task.c</in>
+        <in>tss.c</in>
       </df>
     </df>
     <logicalFolder name="ExternalFiles"
@@ -91,6 +94,7 @@
       <itemPath>SOS_1-Makefile.mk</itemPath>
       <itemPath>bochsrc.txt</itemPath>
       <itemPath>copyright.txt</itemPath>
+      <itemPath>make_floppy.sh</itemPath>
       <itemPath>run.sh</itemPath>
     </logicalFolder>
   </logicalFolder>

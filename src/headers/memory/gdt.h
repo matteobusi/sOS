@@ -2,8 +2,9 @@
 #define GDT_H_INCLUDED
 
 #include <../clib.h>
+#include <userland.h>
 
-#define GDT_LEN 5
+#define GDT_LEN 6
 
 struct gdt_pointer {
     unsigned short limit;
@@ -19,6 +20,8 @@ struct gdt_entry {
     unsigned char   granularity;
     unsigned char   base_high;
 } __attribute__((packed));
+
+void gdt_set_gate(int index, unsigned int base, unsigned int limit, unsigned char access, unsigned char granularity);
 
 //Inits GDT module
 void init_gdt();

@@ -14,6 +14,11 @@
 #ifndef RING_H
 #define	RING_H
 
+#include <userland.h>
+#include <multitasking.h>
+
+#include <interrupts.h>
+
 /*
  * Defines to ring target for each part:
  *      KERNEL_RING has the highest privilege level
@@ -32,12 +37,12 @@
 #define DATA_SELECTOR(l) (0x20 | l)   
 
 /*
- * This function witch to the specified ring the execution for the processor
+ * This function switch to the user ring the execution for the processor
  * Doesn't return any value and it's all about inline-assembly
  * 
  * CHECK: every task switch with different ring-level should switch? Overhead?
  */
-void switch_ring(unsigned short level);
+void switch_to_user();
 
 #endif	/* RING_H */
 

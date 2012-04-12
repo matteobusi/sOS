@@ -18,6 +18,7 @@ enum STATE { READY=0, RUNNING=1, ENDED=2};
 typedef int (*run_t)(int argc, char **argv);
 
 extern unsigned int tick;
+struct list* tasks;
 
 struct task
 {
@@ -35,6 +36,7 @@ struct task
 };
 
 unsigned int tick_count();
+unsigned int get_pid();
 
 void init_tasking();
 struct task* next_task(int p);
