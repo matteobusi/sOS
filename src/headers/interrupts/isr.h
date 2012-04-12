@@ -50,6 +50,8 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
+extern void isr128();
+
 //function to map all isr to the correspondent idt gate
 extern void map_isr();
 //isr exception handler

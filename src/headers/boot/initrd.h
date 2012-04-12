@@ -7,10 +7,10 @@
 #ifndef INITRD_H
 #define	INITRD_H
 
-#include <../memory.h>
-#include <../interrupts.h>
-#include <../utilities.h>
-#include <../clib.h>
+#include <memory.h>
+#include <interrupts.h>
+#include <utilities.h>
+#include <clib.h>
 
 /**
  * InitRD header, this header is intended to be the "base" for all the initrd structure

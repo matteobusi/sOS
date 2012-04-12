@@ -34,6 +34,9 @@ void map_isr()
     idt_set_gate(29, (unsigned int)isr29, 0x08, 0x8E);
     idt_set_gate(30, (unsigned int)isr30, 0x08, 0x8E);
     idt_set_gate(31, (unsigned int)isr31, 0x08, 0x8E);
+    
+    // We setup another gate in the IDT, just for the syscall
+    idt_set_gate(128,(unsigned int)isr128, 0x08, 0x8E);
 }
 
 void add_handler(unsigned char n, isr_t handler)
@@ -48,11 +51,11 @@ void add_schedule_function(schedule_f_t scheduler)
 
 void exception_handler(struct registers reg)
 {
-    if(handlers_list[reg.int_no] != 0)
+    if(handlers_list[reg.int_no&0xFF] != 0)
     {
-        isr_t handler = handlers_list[reg.int_no];
+        isr_t handler = handlers_list[reg.int_no&0xFF];
         handler(reg);
     }
     else
-        kexception(reg.err_no, reg.int_no);
+        kexception(reg.err_no, reg.int_no&0xFF);
 }

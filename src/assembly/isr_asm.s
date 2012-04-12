@@ -54,6 +54,9 @@ ISR_NOERRCODE 29
 ISR_NOERRCODE 30
 ISR_NOERRCODE 31
 
+; We're going to create the ISR for the 0x80, SysCall
+ISR_NOERRCODE 128 ; 0x80 is 128
+ 
 ;here we defines the extern C function
 extern exception_handler
 

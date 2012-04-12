@@ -3,7 +3,7 @@
 
 #define IDT_LEN 256
 
-#include <../utilities.h>
+#include <utilities.h>
 
 #include <isr.h>
 #include <irq.h>
@@ -23,9 +23,7 @@ struct idt_pointer{
 } __attribute__((packed));
 extern void idt_flush(unsigned int);
 
-//function to set an idt entry
 void idt_set_gate(int index, unsigned int base, unsigned short selector, unsigned char flags);
-//inits the IDT module
 void init_idt();
 
 struct idt_pointer idt_p;

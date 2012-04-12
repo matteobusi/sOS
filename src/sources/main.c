@@ -31,14 +31,9 @@ extern unsigned int kend;
 
 multiboot_info_t* mboot_ptr;
 
-int file_loader(int argc, char** argv) {
-    
-    return 0;
-}
-
-int kmain(unsigned int magic_number, void* m_boot_addr) {
+int kmain(unsigned int magic_number, void* m_boot_addr, unsigned int initial_esp) {
     mboot_ptr = (multiboot_info_t*) m_boot_addr;
-
+        
     //Init GDT, IDT and Video
     init_video();
     //Clears the screen
@@ -73,20 +68,19 @@ int kmain(unsigned int magic_number, void* m_boot_addr) {
     kprintf("\n");
     memory_info(mboot_ptr);
 
-    init_tasking();
+    init_tasking(initial_esp);
+    asm volatile("sti");
+    add_task("kernel", 0, (run_t)kmain, 0, (char**)NULL);
+    
     init_effect("Multitasking");
     
-    //Enables interrupts...
-    asm volatile("sti");
-    add_task("kernel", 0, (run_t) kmain, 0, (char**)NULL); //Adding the kernel task, everything starts here :)
-    init_effect("\tkernel");
-        
-    add_task("file_loader", 0, file_loader, 0, (char**)NULL);
-    init_effect("\tfile_loader");
+    init_effect("SysCalls setup");
+    start_calls();
     
     init_effect("User mode");
-    switch_to_user();
+    switch_to_user();    
     
+    asm volatile("int $128");
     
     
     for(;;);

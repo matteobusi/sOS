@@ -11,6 +11,8 @@
 #include <interrupts/irq.h>
 #include <interrupts/panic.h>
 #include <interrupts/pit.h>
+#include <interrupts/isr.h>
+#include <interrupts/syscalls.h>
 
 #endif	/* INTERRUPTS_H */
 

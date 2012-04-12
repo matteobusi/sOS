@@ -9,7 +9,7 @@ void idt_set_gate(int index, unsigned int base, unsigned short selector, unsigne
     idt_table[index].selector = selector;
     idt_table[index].zero = 0;
 
-    idt_table[index].flags = flags;
+    idt_table[index].flags = flags | 0x60;
 }
 
 void init_idt()

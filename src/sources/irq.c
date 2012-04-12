@@ -47,7 +47,7 @@ void irq_handler(struct registers reg)
         outportb(PIC2_COMMAND, 0x20);
     outportb(PIC1_COMMAND, 0x20);
 
-    //Calls the callback setted for the current IRQ
+    //Calls the callback set for the current IRQ
     if(handlers_list[reg.int_no] != 0)
     {
         isr_t handler = handlers_list[reg.int_no];

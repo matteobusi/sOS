@@ -8,7 +8,7 @@
 #ifndef LINKED_LIST_H
 #define	LINKED_LIST_H
 
-#include <../utilities/commons.h>
+#include <utilities/commons.h>
 #include <memory.h>
 
 struct node

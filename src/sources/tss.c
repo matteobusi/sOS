@@ -3,7 +3,7 @@
 void set_tss(int index, unsigned short ss0, unsigned int esp0)
 {
     unsigned int base=(unsigned int)&tss_entry;
-    unsigned int limit=(unsigned int)base+sizeof(struct tss);
+    unsigned int limit=(unsigned int)base+sizeof(tss_entry);
     
     // Setup the gate to host our TSS
     gdt_set_gate(index, base, limit, 0xE9, 0x00);

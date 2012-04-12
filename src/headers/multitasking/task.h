@@ -7,9 +7,10 @@
 #ifndef TASK_H
 #define	TASK_H
 
-#include <../utilities.h>
-#include <../memory.h>
-#include <../clib.h>
+#include <utilities.h>
+#include <memory.h>
+#include <clib.h>
+#include <paging.h>
 
 typedef unsigned int stack_t;
 
@@ -38,7 +39,7 @@ struct task
 unsigned int tick_count();
 unsigned int get_pid();
 
-void init_tasking();
+void init_tasking(unsigned int);
 struct task* next_task(int p);
 void exit(int status);
 void wait(unsigned int time);

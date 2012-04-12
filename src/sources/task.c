@@ -5,10 +5,9 @@ unsigned int pid=0;
 extern struct page_dir* current_dir;
 extern struct page_dir* kernel_dir;
 
-void init_tasking()
+void init_tasking(unsigned int stack)
 {
     tasks=make_list();
-    //adds the handler
     add_schedule_function(schedule);
 }
 
@@ -52,7 +51,7 @@ inline void exit(int status)
     current->ret_value=status;
     current->state=ENDED;
     
-    kprintf("Process %s exited with status [%d]\n", current->name, current->ret_value);
+    //kprintf("Process %s exited with status [%d]\n", current->name, current->ret_value);
     asm volatile("sti");
     
     for(;;); //now stop the process...it will be effectively deleted when the scheduler redo the context switch...

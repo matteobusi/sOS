@@ -2,7 +2,7 @@
 
 void switch_to_user()
 {
-    update_kstack(tasks->current->value->stack);
+    update_kstack(tasks->current->value->stack+sizeof(stack_t));
     //Well, these instructions perform ring switching in kernel
     //nothing too complicate, we move the data selector to 16-bit registers (ax, ds, es, fs, gs), we move
     //the stack pointer to eax and we push data selector, eax.

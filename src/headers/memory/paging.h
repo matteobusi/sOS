@@ -53,4 +53,5 @@ struct page* get_page(unsigned int address, int new_page, struct page_dir* direc
 
 struct page_dir *clone_directory(const struct page_dir* src);
 
+void alloc_frame(struct page* p, int kernel, int writable);
 #endif // PAGING_H_INCLUDED

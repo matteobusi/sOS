@@ -1,7 +1,7 @@
 #ifndef GDT_H_INCLUDED
 #define GDT_H_INCLUDED
 
-#include <../clib.h>
+#include <clib.h>
 #include <userland.h>
 
 #define GDT_LEN 6

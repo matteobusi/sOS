@@ -3,7 +3,7 @@
 [BITS 32]
 
 global start
-INIT_STACK_SIZE equ 0x10000
+INIT_STACK_SIZE equ 0x1000
 ;Start function
 start:
     mov esp, _sys_stack+INIT_STACK_SIZE ;the ESP registers contains _sys_stack
@@ -39,6 +39,7 @@ mboot:
 stublet:
     ;Calls the kernel main function
     extern kmain
+    push esp
     push ebx
     push eax
     call kmain
