@@ -23,7 +23,7 @@
  * Defines to ring target for each part:
  *      KERNEL_RING has the highest privilege level
  *      SERVER_RING defines a "middle" level
- *      USER_RING define the real mode in where users execute their applications
+ *      USER_RING define the mode in where users execute their applications
  */
 
 #define KERNEL_RING 0x0
@@ -40,9 +40,9 @@
  * This function switch to the user ring the execution for the processor
  * Doesn't return any value and it's all about inline-assembly
  * 
- * CHECK: every task switch with different ring-level should switch? Overhead?
  */
 void switch_to_user();
+unsigned int get_run_level();
 
 #endif	/* RING_H */
 

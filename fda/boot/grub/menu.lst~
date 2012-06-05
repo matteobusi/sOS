@@ -1,0 +1,6 @@
+timeout 30
+
+title	sOS
+	root (fd0)
+	kernel /kernel
+	module /initrd

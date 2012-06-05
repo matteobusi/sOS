@@ -1,7 +1,7 @@
 /* 
  * File:   elf.h
  * Author: caos
- *
+ * TODO: Load data section to allow global and static variables!
  * Created on February 25, 2012, 10:26 AM
  */
 
@@ -164,6 +164,20 @@ struct Elf32_Phdr
     Elf32_Word p_align;
 };
 
+struct Elf32_Shdr
+{
+   Elf32_Word sh_name; 		/* section name */
+   Elf32_Word sh_type; 		/* SHT_... */
+   Elf32_Word sh_flags; 	/* SHF_... */
+   Elf32_Addr sh_addr; 		/* virtual address */
+   Elf32_Off sh_offset; 	/* file offset */
+   Elf32_Word sh_size; 		/* section size */
+   Elf32_Word sh_link; 		/* misc info */
+   Elf32_Word sh_info; 		/* misc info */
+   Elf32_Word sh_addralign; 	/* memory alignment */
+   Elf32_Word sh_entsize; 	/* entry size if table */
+};
+
 /*
  * This structure is not defined in the specification for the ELF file, but it's a way to keep informations for
  * elf files all togheter
@@ -172,9 +186,10 @@ struct Elf32_Phdr
 #define MAX_PROGRAM_HEADERS 3
 
 struct Elf32
-{
-    struct Elf32_Ehdr* elf_header;
+{    
     void* program_image;
+    run_t entry;
+    struct Elf32_Ehdr* elf_header;
     struct Elf32_Phdr* program_headers[MAX_PROGRAM_HEADERS];
 };
 
@@ -186,12 +201,14 @@ struct Elf32
  * 
  * You can FREE mapped_exec after loading!
  */
-run_t load_ELF(void* mapped_exec);
+struct Elf32* load_ELF(void* mapped_exec);
 
 /*
  * This function returns the last error done by the loadELF functions, 
  * possible error codes are specified in this file by *_ERR defines
  */
 int last_err();
+
+int is_elf(void* mapped_file);
 #endif	/* ELF_H */
 

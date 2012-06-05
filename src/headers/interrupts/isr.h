@@ -11,7 +11,7 @@
 
 typedef unsigned int stack_t;
 
-typedef void (*isr_t)(struct registers reg);
+typedef void (*isr_t)(struct registers* reg);
 typedef stack_t (*schedule_f_t)(stack_t context);
 isr_t handlers_list[IDT_LEN];
 

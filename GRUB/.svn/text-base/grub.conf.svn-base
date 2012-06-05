@@ -1,0 +1,3 @@
+title=VoxOS
+root (fd0)
+kernel /kernel

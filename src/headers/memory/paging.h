@@ -11,8 +11,7 @@
 #define BIT2OFFSET(a) (a%(8*4))
 #define ADDRESS(i,j) (i*4*8+j)
 
-
-#define PAGE_SIZE 4096
+#define PAGE_SIZE 0x1000
 //paging
 struct page
 {
@@ -39,7 +38,7 @@ struct page_dir
     unsigned int phys;
 };
 
-//inits paging module
+//initializes paging module
 void init_paging(unsigned int size);
 
 //loads in memory the passed directory
@@ -48,10 +47,11 @@ void load_dir(struct page_dir* directory);
 //gets a page
 //at <address>
 //new if <newpage> == 1
-//in <directory> dir
+//in <directory> directory
 struct page* get_page(unsigned int address, int new_page, struct page_dir* directory);
 
 struct page_dir *clone_directory(const struct page_dir* src);
 
 void alloc_frame(struct page* p, int kernel, int writable);
 #endif // PAGING_H_INCLUDED
+

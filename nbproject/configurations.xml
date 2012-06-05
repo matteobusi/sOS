@@ -21,10 +21,13 @@
           <in>system.h</in>
         </df>
         <df name="drivers">
-          <in>keyboard.h</in>
+          <in>driver.h</in>
         </df>
         <df name="executables">
           <in>elf.h</in>
+        </df>
+        <df name="fs">
+          <in>vfs.h</in>
         </df>
         <df name="interrupts">
           <in>idt.h</in>
@@ -32,6 +35,11 @@
           <in>isr.h</in>
           <in>panic.h</in>
           <in>pit.h</in>
+          <in>syscalls.h</in>
+        </df>
+        <df name="ipc">
+          <in>ipc_messages.h</in>
+          <in>mutex.h</in>
         </df>
         <df name="memory">
           <in>gdt.h</in>
@@ -45,10 +53,12 @@
         <df name="structures">
           <in>br_tree.h</in>
           <in>linked_list.h</in>
+          <in>queue.h</in>
         </df>
         <df name="userland">
           <in>ring.h</in>
           <in>tss.h</in>
+          <in>unistd.h</in>
         </df>
         <df name="utilities">
           <in>commons.h</in>
@@ -61,27 +71,35 @@
         <in>multitasking.h</in>
         <in>userland.h</in>
         <in>utilities.h</in>
+        <in>vesa.h</in>
       </df>
       <df name="sources">
+        <in>driver.c</in>
         <in>elf.c</in>
         <in>gdt.c</in>
         <in>graphics.c</in>
         <in>heap.c</in>
         <in>idt.c</in>
         <in>initrd.c</in>
+        <in>ipc_messages.c</in>
         <in>irq.c</in>
         <in>isr.c</in>
         <in>linked_list.c</in>
         <in>main.c</in>
+        <in>mutex.c</in>
         <in>paging.c</in>
         <in>panic.c</in>
         <in>physman.c</in>
         <in>pit.c</in>
+        <in>queue.c</in>
         <in>ring.c</in>
         <in>stdout.c</in>
+        <in>syscalls.c</in>
         <in>system.c</in>
         <in>task.c</in>
         <in>tss.c</in>
+        <in>vesa.c</in>
+        <in>vfs.c</in>
       </df>
     </df>
     <logicalFolder name="ExternalFiles"
@@ -122,6 +140,7 @@
               <pElem>src/headers/utilities</pElem>
               <pElem>src/headers/multitasking</pElem>
               <pElem>src/headers/structures</pElem>
+              <pElem>src/headers/fs</pElem>
               <pElem>.</pElem>
               <pElem>src/headers/interrupts</pElem>
               <pElem>src/headers/memory</pElem>
@@ -137,9 +156,13 @@
       </item>
       <item path="src/assembly/isr_asm.s" ex="true" tool="4" flavor="0">
       </item>
+      <item path="src/assembly/pagecopy.s" ex="true" tool="4" flavor="0">
+      </item>
       <item path="src/assembly/start.s" ex="true" tool="4" flavor="0">
       </item>
-      <item path="src/headers/drivers/keyboard.h" ex="true" tool="3" flavor="0">
+      <item path="src/headers/ipc/mutex.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="src/headers/structures/br_tree.h" ex="true" tool="3" flavor="0">
       </item>
     </conf>
   </confs>

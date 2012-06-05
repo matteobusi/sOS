@@ -1,21 +1,40 @@
 #include <clib/stdout.h>
 
-
-#define NUM_CHAR '0'
-#define STR_CHAR ' '
+#include <vesa.h>
 
 unsigned short attrib = 0x07;
+unsigned short v_mode=TEXT_MODE;
 unsigned short* videomem;
 
 //cursor's position
-int x, y, page;
+int x, y;
 int initialized=0;
 
-void init_video()
+void init_video(unsigned short video_mode, vesa_mode_info_t* v_mode_info)
 {
-   videomem = (unsigned short*) 0xb8000;
-   initialized=1;
-   x = y=page=0;
+    v_mode=video_mode;
+    if(video_mode==TEXT_MODE)
+        videomem = (unsigned short*)0xb8000;
+    else
+        videomem=(unsigned short*)v_mode_info->phys_base_ptr;
+   x = y = 0;
+}
+
+int get_x_cur()
+{
+    return x;
+}
+
+int get_y_cur()
+{
+    return y;
+}
+
+void set_cur_pos(int _x, int _y)
+{
+    x=_x;
+    y=_y;
+    refresh_cursor();
 }
 
 void refresh_cursor()
@@ -38,25 +57,34 @@ void get_colors(unsigned char* backcolor, unsigned char* forecolor)
     *forecolor = ((attrib) - ((*backcolor)<<4))&0xFF;
 }
 
-void scroll_page(int n_LINES)
+void scroll_page(int n_lines)
 {
-    if(y >= LINES)
+    if(v_mode==TEXT_MODE && y >=LINES)
     {
-       unsigned short blank = ' ' | (attrib<<8);
-       int i;
-       for(i=0; i < (LINES - n_LINES)*COLUMNS; i++)
-        videomem[i] = videomem[i+COLUMNS*n_LINES];
-        
-       for (i = 24*80; i < 25*80; i++)
-           videomem[i] = blank;
-        y -= n_LINES;
+        unsigned short blank = ' ' | (attrib<<8);
+        int i;
+        for(i=0; i < (LINES - n_lines)*COLUMNS; i++)
+            videomem[i] = videomem[i+COLUMNS*n_lines];
+
+        for (i = (LINES-1)*COLUMNS; i < LINES*COLUMNS; i++)
+            videomem[i] = blank;
+         y -= n_lines;
     }
+    else if(y>=LINES)
+    {
+        int i;
+        for(i=0; i < (LINES - n_lines)*COLUMNS; i++)
+            videomem[i] = videomem[i+COLUMNS*n_lines];
+
+        for (i = (LINES-1)*COLUMNS; i < LINES*COLUMNS; i++)
+            putc(' ');
+         y -= n_lines;
+    }
+            
 }
 
 void putc(unsigned char ch)
 {
-    if(!initialized)
-        init_video();
     if(ch == '\b')
     {
         if(x <=0)
@@ -89,7 +117,10 @@ void putc(unsigned char ch)
     }
     else
     {
-        videomem[x+y*COLUMNS] = ch | (attrib<<8);
+        if(v_mode==TEXT_MODE)
+                videomem[x+y*COLUMNS] = ch | (attrib<<8);
+        else
+                draw_char(x, y, 0xA0A0A0, 0x000000, ch);
         x++;
         if(x >= COLUMNS)
         {
@@ -164,6 +195,11 @@ int putd(int number, int base)
 
 int kprintf(char* arg, ...)
 {
+    static LOCK* tmp=(LOCK*)NULL;
+    if(tmp==(LOCK*)NULL)
+        tmp=init_mutex();
+    
+    lock(tmp);
     va_list argp;
     va_start(argp, arg);
     char* s='\0';
@@ -275,5 +311,6 @@ int kprintf(char* arg, ...)
         arg++;
     }
     va_end(arguments);
+    unlock(tmp);
     return sum;
 }

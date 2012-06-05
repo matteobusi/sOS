@@ -41,4 +41,6 @@ int utoa(unsigned int number, int base, char* dest);
 
 int atoi(char* str, int* len);
 
+int ends_with(const char* src, const char* s);
+
 #endif // SYSTEM_H_INCLUDED

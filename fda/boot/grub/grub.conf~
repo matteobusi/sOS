@@ -1,0 +1,3 @@
+title=sOS
+root (fd0)
+kernel /kernel vga=259

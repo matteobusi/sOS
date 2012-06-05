@@ -1,11 +1,12 @@
 #include <interrupts/pit.h>
 
-unsigned int tick=0;
+unsigned int tick;
 
 extern stack_t schedule(stack_t context);
 
 void init_timer(unsigned int frequency)
 {
+    tick=0;
     unsigned int div = FREQ / frequency;
 
     //sends the command to the pit

@@ -3,60 +3,64 @@
 
 static unsigned int err=NO_ERR;
 
-run_t load_ELF(void* mapped_exec)
+int is_elf(void* mapped_file)
 {
+    struct Elf32_Ehdr* elf_header=mapped_file;
+    if(elf_header->e_ident[EI_MAG0_POS]!=EI_MAG0 || elf_header->e_ident[EI_MAG1_POS]!=EI_MAG1 || elf_header->e_ident[EI_MAG2_POS]!=EI_MAG2 || elf_header->e_ident[EI_MAG3_POS]!=EI_MAG3)
+        return 0;
+    return 1;
+}
+
+struct Elf32* load_ELF(void* mapped_exec)
+{
+    err=NO_ERR;
     int i;
     
     struct Elf32* elf=(struct Elf32*)kmalloc(sizeof(struct Elf32));
-    elf->elf_header = (struct Elf32_Ehdr*)kmalloc(sizeof(struct Elf32_Ehdr));    
-    memcpy(elf->elf_header, mapped_exec, sizeof(struct Elf32_Ehdr));
+    elf->elf_header = mapped_exec;
     
     //We check the magic number
-    if(elf->elf_header->e_ident[EI_MAG0_POS]!=EI_MAG0 || elf->elf_header->e_ident[EI_MAG1_POS]!=EI_MAG1 || elf->elf_header->e_ident[EI_MAG2_POS]!=EI_MAG2 || elf->elf_header->e_ident[EI_MAG3_POS]!=EI_MAG3)
+    if(!is_elf(mapped_exec))
     {
         err=MAGIC_ERR;
-        return (run_t)NULL;
+        return (struct Elf32*)NULL;
     }
     
-    //Here the platform
+    //Here the platform    
     if(elf->elf_header->e_ident[EI_CLASS]!=CURRENT_CLASS || elf->elf_header->e_ident[EI_DATA]!=CURRENT_DATA || elf->elf_header->e_machine!=CURRENT_MAC)
     {
         err=ARCH_ERR;
-        return (run_t)NULL;
+        return (struct Elf32*)NULL;
     }
     
     //Here the version
     if(elf->elf_header->e_ident[EI_VERSION]!=EV_CURRENT || elf->elf_header->e_ident[EI_VERSION]!=elf->elf_header->e_version)
     {
         err=VER_ERR;
-        return (run_t)NULL;
+        return (struct Elf32*)NULL;
     }
-    
+    elf->program_image=mapped_exec;
+        
     for(i=0; i < elf->elf_header->e_phnum; i++)
-    { 
-        elf->program_headers[i]=(struct Elf32_Phdr*) kmalloc(sizeof(struct Elf32_Phdr));   
-        if(elf->program_headers[i]==(struct Elf32_Phdr*)NULL)
-        {
-                err=MEM_ERR;
-                return (run_t)NULL;
-        }
-
-        memcpy(elf->program_headers[i], mapped_exec+elf->elf_header->e_phoff+i*elf->elf_header->e_phentsize, elf->elf_header->e_phentsize);
-    }
-    
-    unsigned int size=2*elf->program_headers[0]->p_memsz; //TODO
-    elf->program_image=(void*)kmalloc(size);
-    if(elf->program_image==NULL)
     {
-        err=MEM_ERR;
-        return (run_t)NULL;
+        elf->program_headers[i]=(struct Elf32_Phdr*)(mapped_exec+elf->elf_header->e_phoff+i*elf->elf_header->e_phentsize); 
+
+        if(elf->program_headers[i]->p_type==PT_LOAD)
+        {
+            unsigned int dest, src;
+            unsigned int len;
+            dest=elf->program_headers[i]->p_vaddr;
+            // map(dest, map_to, get_task_by_pid(get_pid())->directory);
+            len=elf->program_headers[i]->p_filesz;
+            src=(unsigned int)mapped_exec+elf->program_headers[i]->p_offset;
+            memcpy((void*)dest, (void*)src, len);
+            dest+=len;
+            memset((void*)dest, 0, elf->program_headers[i]->p_memsz-len);
+        }
     }
     
-     for(i=0; i < elf->elf_header->e_phnum; i++)
-         if(elf->program_headers[i]->p_type==PT_LOAD)
-            memcpy(elf->program_image+elf->program_headers[i]->p_offset, mapped_exec+elf->program_headers[i]->p_offset, elf->program_headers[i]->p_memsz);
-    
-     return (run_t)(elf->program_image+elf->program_headers[0]->p_offset+elf->elf_header->e_entry);
+    elf->entry=(run_t)elf->elf_header->e_entry;
+    return elf;
 }
 
 int last_err()

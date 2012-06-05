@@ -68,4 +68,7 @@ extern void remap_IRQ();
 
 void irq_handler(struct registers reg);
 
+void enable_int();
+void disable_int(char* f, int l);
+
 #endif // IRQ_H_INCLUDED

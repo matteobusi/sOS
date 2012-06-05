@@ -14,7 +14,8 @@ static unsigned int get_offset(struct mem_block_header* address)
     return 0;
 }
 
-void init_heap() {
+void init_heap() 
+{
     kernel_heap = (struct mem_block_header*)HEAP_BASE;
     kernel_heap->previous = (struct mem_block_header*)NULL;
     kernel_heap->next=(struct mem_block_header*)NULL;
@@ -22,6 +23,10 @@ void init_heap() {
     kernel_heap->size=-1;
     kernel_heap->magic=HEAP_MAGIC;
     free_blocks++;
+    
+    // Here we have a real HEAP! so allocate some space for user programs, as defined by HEAP_USER_PROG
+    int usr_space=kmalloc(HEAP_USER_PROG); 
+    kprintf("User space for programs @ [0x%h, 0x%h] for %d MBs\n", usr_space, usr_space+HEAP_USER_PROG, HEAP_USER_PROG/(1024*1024));
 }
 
 static void* add_new(unsigned int size, char aligned) {
@@ -45,7 +50,8 @@ static void* add_new(unsigned int size, char aligned) {
 
 
 
-static void* best_fit(unsigned int size, char aligned) {
+static void* best_fit(unsigned int size, char aligned)
+{
     //starts from the first block
     struct mem_block_header* current_block = (struct mem_block_header*)HEAP_BASE;
     struct mem_block_header* best=current_block;
@@ -61,7 +67,6 @@ static void* best_fit(unsigned int size, char aligned) {
         //if the memory have to be memory aligned we need an additional chunck of memory (maybe 0 :)
         if(aligned)
             offset = get_offset(current_block);
-
 
         //a small optimization
         if(current_block->is_free && current_block->size== size + offset)
@@ -96,28 +101,29 @@ void* alloc(unsigned int size, char aligned)
         return best_fit(size, aligned);
 }
 
-void kfree(void* ptr) {
+void kfree(void* ptr, char* f, int l)
+{
     if(ptr == NULL) return;
-
+    disable_int(__FILE__, __LINE__);
     struct mem_block_header* head = (struct mem_block_header*)(ptr-sizeof(struct mem_block_header));
-
-    //TODO: find a better way...althought this is O(PAGE_SIZE), at most uses PAGE_SIZE steps
+    //TODO: find a better way...it's not really elegant
     if((int)ptr%PAGE_SIZE == 0)
     {
-        //searches the header...
+        //searches the header... 
         int i;
         for(i=0; i < PAGE_SIZE; i++)
             if(((struct mem_block_header*)(ptr-i-sizeof(struct mem_block_header)))->magic==HEAP_MAGIC)
             {
-                head=(struct mem_block_header*)(ptr-i-sizeof(struct mem_block_header));
+                head=((struct mem_block_header*)(ptr-i-sizeof(struct mem_block_header)));
                 break;
             }
     }
-
     if(head->magic != HEAP_MAGIC) 
-        kpanic("Error while freeing memory: currupted or damaged memory!", (unsigned int)head, __FILE__, __LINE__);
-
+    {
+        kpanic("Error while freeing memory: currupted or damaged memory!", (unsigned int)head, f, l);
+    }
     //now frees the chunk
     head->is_free=1;
     free_blocks++;
+    enable_int();
 }

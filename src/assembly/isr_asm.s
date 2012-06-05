@@ -61,7 +61,7 @@ ISR_NOERRCODE 128 ; 0x80 is 128
 extern exception_handler
 
 isr_common_handler:
-    pusha ;It saves registers ax, cx, dx, bx, sp, bp, si, di state
+    pusha ; Save 32bit registers
     mov ax, ds ;move the data segment to ax
     push eax
 
@@ -73,11 +73,11 @@ isr_common_handler:
 
     call exception_handler
 
-    pop eax
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
+    pop ebx
+    mov ds, bx
+    mov es, bx
+    mov fs, bx
+    mov gs, bx
 
     popa
     add esp,8

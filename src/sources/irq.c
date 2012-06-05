@@ -41,16 +41,33 @@ void remap_IRQ()
 
 void irq_handler(struct registers reg)
 {
+    reg.int_no&=0xFF;
     //Sends EOI
     //if irq no >= 40 sends it also to the second PIC
     if(reg.int_no>=40)
         outportb(PIC2_COMMAND, 0x20);
     outportb(PIC1_COMMAND, 0x20);
 
-    //Calls the callback set for the current IRQ
+    // Calls the callback set for the current IRQ
+    struct task* tmp;
+    if((tmp=get_driver_int(reg.int_no))!=0 && handlers_list[reg.int_no]==0)
+    {       
+        // If the request is in the driver's list, use it...
+        send_irq_ack(tmp->pid);
+    }
     if(handlers_list[reg.int_no] != 0)
     {
         isr_t handler = handlers_list[reg.int_no];
-        handler(reg);
+        handler(&reg);
     }
+}
+
+void enable_int()
+{
+    asm volatile("sti");
+}
+
+void disable_int(char* f, int l)
+{
+    asm volatile("cli");
 }

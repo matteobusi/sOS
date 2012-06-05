@@ -53,19 +53,19 @@ static unsigned int first_free_frame()
     return -1;
 }
 
-static void page_fault(struct registers regs)
+static void page_fault(struct registers* regs)
 {
     unsigned int exc_addr;
     //Gets the exception unsigned int from cr2 register
     asm volatile("mov %%cr2, %0": "=r"(exc_addr));
     //analyzes the cases:
     int usr,rw, p;
-    p = !(regs.err_no & 0x1);
-    rw = regs.err_no & 0x2;
-    usr = regs.err_no & 0x4;
+    p = !(regs->err_no & 0x1);
+    rw = regs->err_no & 0x2;
+    usr = regs->err_no & 0x4;
     int n = (usr << 3)|(rw<<2)|p;
     //prints the error message
-    kpanic(page_fault_msg[n%8], exc_addr, __FILE__, __LINE__);
+    kpanic(page_fault_msg[n%8], tasks->current->value->pid, __FILE__, __LINE__);
     for(;;);
 }
 
@@ -93,9 +93,6 @@ void free_frame(struct page* p)
     clear_frame(frame);
     frame = 0;
 }
-
-
-
 static struct page_table* clone_table(struct page_table* src, unsigned int* phys)
 {
     //creates the new table...
@@ -107,7 +104,7 @@ static struct page_table* clone_table(struct page_table* src, unsigned int* phys
     //zeroes it...
     memset(new_table, 0, sizeof(struct page_dir));
     
-    //and now, the same as clone_directory, we copy all the non-empty frames...
+    //and now, the same as clone_directory, we copy all non-empty frames...
     int i;
     for(i=0; i < 1024;i++)
     {
@@ -136,7 +133,7 @@ struct page_dir *clone_directory(const struct page_dir* src)
     struct page_dir* new_dir=(struct page_dir*)kmalloc_ap(sizeof(struct page_dir), &phys); //Gets a new address, aligned in memory and its physical address
     
     if(new_dir==(struct page_dir*)NULL)
-        kpanic("Error!", 0x0, __FILE__, __LINE__);
+        kpanic("Error while creating a new paging directory :'(", 0x0, __FILE__, __LINE__);
 
     memset(new_dir, 0, sizeof(struct page_dir)); //zeroes the memory...
     //get the offset of the physical addresses of pages tables from the start of the dir...
@@ -154,14 +151,14 @@ struct page_dir *clone_directory(const struct page_dir* src)
         
         /*
          * Now, if the current table is also in the kernel directory we should link it (we don't have to copy the kernel code and data, but only to link them)
-         * else if we copy the table...
+         * else we copy the table...
          */
 
         if(kernel_dir->tables[i]==src->tables[i])
         {
             //our table is also in the kernel dir, link!
-            new_dir->tables[i]=kernel_dir->tables[i];
-            new_dir->physical_table[i] = kernel_dir->physical_table[i];
+            new_dir->tables[i]=src->tables[i];
+            new_dir->physical_table[i] = src->physical_table[i];
         }            
         else
         {
@@ -175,65 +172,52 @@ struct page_dir *clone_directory(const struct page_dir* src)
 
 void init_paging(unsigned int size)
 {
-    //gets number of frames
+    /* Gets number of frames */
     n_frames = size/PAGE_SIZE;
-    //inits the frame allocator
+    
+    /* Initialize the frame allocator */
     frames = (unsigned int*)kmalloc(BIT2INDEX(n_frames));
     memset(frames, 0, BIT2INDEX(n_frames));
 
-    //creates the page dir
-    unsigned int phys;
-    kernel_dir = (struct page_dir*) kmalloc_ap(sizeof(struct page_dir), &phys);
+    /* Creates the page directory */
+    kernel_dir = (struct page_dir*) kmalloc_a(sizeof(struct page_dir));
     
-    unsigned int offset=(unsigned int)kernel_dir->physical_table - (unsigned int)kernel_dir;
+    /* Sets everything to 0 */
+    memset(kernel_dir, 0, sizeof(struct page_dir));    
+    kernel_dir->phys = (unsigned int)kernel_dir->physical_table;
     
-    kernel_dir->phys = phys + offset;
-    
-    //set everything to 0
-    memset(kernel_dir, 0, sizeof(struct page_dir));
-    //then sets current directory to the kernel one
-    
+    /* Then sets current directory to the kernel one */
     current_dir = kernel_dir;
-        
-    
     int i;
 
-    //from HEAP_BASE to HEAP_END maps
+    /* From HEAP_BASE to HEAP_END maps */
     for(i=HEAP_BASE; i<HEAP_END; i+=PAGE_SIZE)
         get_page(i, 1, kernel_dir);
 
-    //identity map from 0x0 to init address
+    /* Identity map from 0x0 to initial address */
     i=0;
-    while(i<init_address)
+    while(i<init_address+PAGE_SIZE)
     {
         alloc_frame(get_page(i, 1, kernel_dir), 0, 0);
         i+=PAGE_SIZE;
     }
-
+    
     for(i=HEAP_BASE; i<HEAP_END; i+=PAGE_SIZE)
         alloc_frame(get_page(i, 1, kernel_dir), 0,0);
-    
-    init_heap();
-    //adds fault handler for pagefault
+ 
+    /* Adds fault handler for page fault */   
     add_handler(14, page_fault);
-    //loads and enable the kernel directory
-    load_dir(kernel_dir);
-           
-    current_dir=clone_directory(kernel_dir);
     
+    /* Loads and enable the kernel directory */
+    load_dir(kernel_dir);
+    init_heap();
     load_dir(current_dir);
 }
 
 void load_dir(struct page_dir* directory)
 {
    current_dir=directory;
-   
-   unsigned int address;
-   if(directory==kernel_dir)
-       address=(unsigned int)directory->physical_table;
-   else
-       address=directory->phys;
-   
+   unsigned int address=directory->phys;
    asm volatile("mov %0, %%cr3":: "r"(address));
    unsigned int cr0;
    asm volatile("mov %%cr0, %0": "=r"(cr0));

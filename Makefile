@@ -1,6 +1,6 @@
 #Compiler and linker options
 CC=gcc
-CFLAGS=-Wall -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -I./src/headers/ -I./src/headers/boot -I./src/headers/clib -I./src/headers/interrupts -I./src/headers/memory -I./src/headers/multitasking -I./src/headers/structures -I./src/headers/utilities -c -o
+CFLAGS=-Wall -g -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -I./src/headers/ -I./src/headers/boot -I./src/headers/clib -I./src/headers/interrupts -I./src/headers/memory -I./src/headers/multitasking -I./src/headers/structures -I./src/headers/utilities -I./src/headers/fs -c -o
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 

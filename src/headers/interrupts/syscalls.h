@@ -10,11 +10,29 @@
 
 #include <interrupts/isr.h>
 
-typedef int (*syscall_t)(int pid, ...);
+#include <clib/stdout.h>
+
+#include <memory.h>
+#include <ipc/ipc_messages.h>
+
+#include <drivers/driver.h>
+
+#include <fs/vfs.h>
+
+#include <clib/stdout.h>
+
+#define MAX_SYSCALLS 256
+
+typedef void* syscall_t;
+
+int call_id;
+syscall_t calls_vector[MAX_SYSCALLS];
 
 void start_calls();
 int add_call(syscall_t call);
-void syscall_mngr(struct registers r);
+void garbage_collect();
+unsigned int syscall_mngr(struct registers* r);
+int is_syscall();
 
 #endif	/* SYSCALLS_H */
 

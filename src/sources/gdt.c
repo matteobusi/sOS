@@ -35,6 +35,7 @@ void init_gdt()
     gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
     
     // Ok, add the tss
+   
     set_tss(5, 0x10, 0x0);
 
     /*actually flushes gdt with lgdt code*/

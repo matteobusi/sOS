@@ -43,11 +43,11 @@ irq_common_handler:
 
     call irq_handler
 
-    pop eax
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
+    pop ebx
+    mov ds, bx
+    mov es, bx
+    mov fs, bx
+    mov gs, bx
 
     popa
     add esp,8
@@ -63,11 +63,11 @@ irq0:
                 push fs         ;push fs
                 push gs         ;push gs
 
-                mov eax, 0x10   ;saves selector
-                mov ds, eax
-                mov es, eax
-                mov fs, eax
-                mov gs, eax
+                mov ax, 0x10   ;saves selector
+                mov ds, ax
+                mov es, ax
+                mov fs, ax
+                mov gs, ax
 
                 push esp        ;pushes esp
 

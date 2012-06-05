@@ -50,12 +50,21 @@ void add_schedule_function(schedule_f_t scheduler)
 }
 
 void exception_handler(struct registers reg)
-{
-    if(handlers_list[reg.int_no&0xFF] != 0)
+{    
+    reg.int_no&=0xFF;
+    if(handlers_list[reg.int_no] != 0)
     {
-        isr_t handler = handlers_list[reg.int_no&0xFF];
-        handler(reg);
+       isr_t handler = handlers_list[reg.int_no];
+       // Temporary solution
+       if(reg.int_no==0x80)
+       {
+           int (*syscall_manager)(struct registers*)=(int (*)(struct registers*))handler;
+           int ret=syscall_manager(&reg);
+           memcpy(&reg.eax, &ret, sizeof(int));
+       }
+       else
+           handler(&reg);
     }
     else
-        kexception(reg.err_no, reg.int_no&0xFF);
+        kexception(reg.err_no, reg.int_no);
 }

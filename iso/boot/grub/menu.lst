@@ -1,0 +1,6 @@
+timeout 5
+
+title	sOS kernel
+	kernel /kernel
+	module /initrd
+        #vbeset 0x115

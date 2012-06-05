@@ -38,7 +38,6 @@ void add(struct task* tsk, struct list* lst)
     lst->size++;
 }
 
-
 void remove(struct task* tsk, struct list* lst)
 {
     struct node* tmp=lst->first_node->next;
@@ -50,8 +49,10 @@ void remove(struct task* tsk, struct list* lst)
     }
     
     prec->next=tmp->next;
+    kfree((void*)tmp->value->kernel_stack, __FILE__, __LINE__);
+    kfree((void*)tmp->value->original_stack, __FILE__, __LINE__);
     
-    kfree(tmp->value);
-    kfree(tmp);
+    kfree(tmp->value, __FILE__, __LINE__);
+    kfree(tmp, __FILE__, __LINE__);
     lst->size--;
 }

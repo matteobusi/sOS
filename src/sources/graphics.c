@@ -5,9 +5,7 @@ void print_logo()
 {
     char logo[][50]= {" ", "SOS - A multitaking simple hybrid kernel",
                       "Version 0.0.1"};
-    int i;
-    for(i=0; i < 3; i++)
-        kprintf("%80s", logo[i]);    
+    kprintf("\n%80s\n%80s\n\n", logo[1], logo[2]);
 }
 
 void memory_info(void* m_boot_addr)
